@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventsModule } from './events/events.module';
 import { UsersModule } from './users/users.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { InscriptionModule } from './inscription/inscription.module';
+import { CertificateModule } from './certificate/certificate.module';
 
 @Module({
   imports: [ 
@@ -14,7 +16,7 @@ import { SessionsModule } from './sessions/sessions.module';
       entities: [ __dirname + '/**/*.entity{.ts,.js}' ],
       synchronize: true,
       logging: true,
-    }), EventsModule, UsersModule, SessionsModule 
+    }), EventsModule, UsersModule, SessionsModule, InscriptionModule, CertificateModule 
   ],
   controllers: [AppController],
   providers: [AppService],
