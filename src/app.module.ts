@@ -7,15 +7,22 @@ import { UsersModule } from './users/users.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { InscriptionModule } from './inscription/inscription.module';
 import { CertificateModule } from './certificate/certificate.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [ 
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      database: process.env.DB_DATABASE,
+      username: 'postgres',
+      password: 'postgres',
       entities: [ __dirname + '/**/*.entity{.ts,.js}' ],
       synchronize: true,
-      logging: true,
+      logging: false,
+      migrations: [__dirname + 'database/migrations/*{.js,.ts}'],
     }), EventsModule, UsersModule, SessionsModule, InscriptionModule, CertificateModule 
   ],
   controllers: [AppController],

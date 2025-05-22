@@ -1,18 +1,15 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm";
-
+import { Column, PrimaryGeneratedColumn } from 'typeorm';
 
 export class Session {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number
+  @Column()
+  title: string;
 
-    @Column()
-    title: string
+  @Column()
+  description: string;
 
-    @Column()
-    description: string
-
-    @Column()
-    duration: number
-    
+  @Column()
+  duration: number;
 }

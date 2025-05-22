@@ -1,5 +1,4 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 export class Certificate {
@@ -7,7 +6,7 @@ export class Certificate {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ type: 'uuid', unique: true, default: () => 'uuid_generate_v4()' })
+    @Column()
     val_code: string
 
     @Column()

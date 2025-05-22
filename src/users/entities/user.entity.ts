@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
+import { Inscriptions } from './../../inscription/entities/inscription.entity'
 
 @Entity()
 @TableInheritance({ column: { type:'varchar', name: 'type' } })
@@ -15,4 +16,7 @@ export abstract class User{
 
     @Column()
     type: string;
+
+    @OneToMany(() => Inscriptions, (inscription) => inscription.user)
+    inscriptions: Inscriptions[];
 }

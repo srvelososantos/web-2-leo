@@ -1,9 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
+import { Inscriptions } from '../../inscription/entities/inscription.entity'
 
 @Entity()
 export class Event {
 
-    @Column()
+    @PrimaryGeneratedColumn()
     id: number
 
     @Column()
@@ -20,4 +21,7 @@ export class Event {
     
     @Column()
     max_cap: number
+
+    @OneToMany(() => Inscriptions, (inscription) => inscription.event)
+    inscriptions: Inscriptions[];
 }

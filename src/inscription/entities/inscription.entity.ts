@@ -1,7 +1,7 @@
 import { User } from "src/users/entities/user.entity";
 import { Event } from "src/events/entities/event.entity"
 import { Status } from "src/enums/status.enum"
-import { Column, Entity, ListCollectionsCursor, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ListCollectionsCursor, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -10,10 +10,10 @@ export class Inscriptions{
     @PrimaryGeneratedColumn()
     id: number
     
-    @Column()
+    @ManyToOne(() => User, (user) => user.inscriptions, { eager: true } )
     user: User
 
-    @Column()
+    @ManyToOne(() => Event, (event) => event.inscriptions, { eager: true })
     event: Event
 
     @Column()
