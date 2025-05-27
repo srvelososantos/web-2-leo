@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { Response } from 'express';
 
 @Controller('events')
 export class EventsController {
@@ -13,8 +14,9 @@ export class EventsController {
   }
 
   @Get()
-  findAll() {
-    return this.eventsService.findAll();
+  async findAll(@Res() response: Response) {
+    const events = await this.eventsService.findAll()
+    return response.status(200).json(events);
   }
 
   @Get(':id')
