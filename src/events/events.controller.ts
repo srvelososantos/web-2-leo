@@ -9,8 +9,8 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Post()
-  create(@Body() createEventDto: CreateEventDto) {
-    return this.eventsService.create(createEventDto);
+  async create(@Body() createEventDto: CreateEventDto) {
+    return await this.eventsService.create(createEventDto);
   }
 
   @Get()
@@ -33,4 +33,5 @@ export class EventsController {
   remove(@Param('id') id: string) {
     return this.eventsService.remove(+id);
   }
+  
 }

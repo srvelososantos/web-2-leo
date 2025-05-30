@@ -8,7 +8,6 @@ import { SessionsModule } from './sessions/sessions.module';
 import { InscriptionModule } from './inscription/inscription.module';
 import { CertificateModule } from './certificate/certificate.module';
 import { ConfigModule } from '@nestjs/config';
-import { UsersService } from './users/users.service';
 
 @Module({
   imports: [ 
@@ -20,7 +19,6 @@ import { UsersService } from './users/users.service';
       database: process.env.DB_DATABASE,
       username: 'postgres',
       password: 'postgres',
-      
       synchronize: true,
       autoLoadEntities: true,
       logging: false,

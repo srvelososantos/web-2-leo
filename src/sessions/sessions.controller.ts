@@ -1,34 +1,38 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, ParseIntPipe, Put } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
+import { response, Response } from 'express';
+import { Session } from './entities/session.entity';
 
-@Controller('sessions')
+@Controller()
 export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
-  @Post()
-  create(@Body() createSessionDto: CreateSessionDto) {
-    return this.sessionsService.create(createSessionDto);
+  @Post('events/:id/sessions')
+  async create(@Res() response: Response, @Body() createSessionDto: CreateSessionDto, @Param('id', ParseIntPipe) id: number,): Promise<Session | Record<string, any>> {
+    await this.sessionsService.create(id, createSessionDto)
+    return response.status(200).json({ message: "Session Created Succesfully!" })
   }
 
-  @Get()
-  findAll() {
-    return this.sessionsService.findAll();
+  @Get('events/:id/sessions')
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Session[]> {
+    return this.sessionsService.findByEventId(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sessionsService.findOne(+id);
+  @Get('sessions/:id')
+  findBySessionId(@Param('id', ParseIntPipe) id: number): Promise<Session[]> {
+    return this.sessionsService.findById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
+  @Put('sessions/:id')
+  update(@Param('id') id: ParseIntPipe, @Body() updateSessionDto: UpdateSessionDto) {
     return this.sessionsService.update(+id, updateSessionDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sessionsService.remove(+id);
+  @Delete('sessions/:id')
+  async remove(@Param('id') id: number) {
+    await this.sessionsService.remove(+id);
+    return response.status(204)
   }
 }

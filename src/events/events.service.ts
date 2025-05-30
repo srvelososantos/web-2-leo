@@ -14,8 +14,8 @@ export class EventsService {
   ) {}
 
   async create(createEventDto: CreateEventDto): Promise<CreateEventDto> {
-    const createdUser = await this.eventsRepository.save(createEventDto)
-    return createdUser;
+    const  createdEvent = await this.eventsRepository.save(createEventDto)
+    return createdEvent;
   }
 
   async findAll(): Promise<Event[]> {

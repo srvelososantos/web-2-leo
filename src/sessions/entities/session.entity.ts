@@ -1,5 +1,7 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Event } from 'src/events/entities/event.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Session {
   @PrimaryGeneratedColumn()
   id: number;
@@ -12,4 +14,8 @@ export class Session {
 
   @Column()
   duration: number;
+
+  // Cada sessão pertence a um único evento
+  @ManyToOne(() => Event, event => event.sessions, { onDelete: 'CASCADE' })
+  eventt: Event;
 }
