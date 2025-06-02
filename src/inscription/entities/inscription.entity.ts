@@ -1,7 +1,7 @@
 import { User } from "src/users/entities/user.entity";
 import { Event } from "src/events/entities/event.entity"
 import { Status } from "src/enums/status.enum"
-import { Column, Entity, ListCollectionsCursor, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()

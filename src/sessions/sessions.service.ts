@@ -45,8 +45,11 @@ export class SessionsService {
       where: { id: id },
       relations: ['sessions']
     });
-    if(!searchEvent) throw new HttpException('Event not found!', HttpStatus.NOT_FOUND)
-    
+    if(!searchEvent){
+      throw new HttpException('Event not found!', HttpStatus.NOT_FOUND)
+    }else{
+      if(searchEvent.sessions.length === 0) throw new HttpException('Sessions not found!', HttpStatus.NOT_FOUND)
+    }
     return searchEvent.sessions
   }
 

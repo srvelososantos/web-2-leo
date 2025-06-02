@@ -1,16 +1,25 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
 import { Repository } from 'typeorm';
+import { Inscriptions } from 'src/inscription/entities/inscription.entity';
+import { CreateInscriptionDto } from 'src/inscription/dto/create-inscription.dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class EventsService {
 
   constructor(
     @InjectRepository(Event)
-    private readonly eventsRepository: Repository<Event>
+    private readonly eventsRepository: Repository<Event>,
+
+    @InjectRepository(Inscriptions)
+    private readonly inscriptionsRepository: Repository<Inscriptions>,
+
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>
   ) {}
 
   async create(createEventDto: CreateEventDto): Promise<CreateEventDto> {
@@ -44,5 +53,23 @@ export class EventsService {
 
   async remove(id: number) {
     return this.eventsRepository.delete(id)
+  }
+
+
+  //responsavel por inscrever participante em um evento
+  async signupPartEvent(eventId: number, userId: number, createInscriptionDto: CreateInscriptionDto){
+    const event = await this.eventsRepository.findOne({ where: { id: eventId } })
+    if(!event) throw new HttpException('Event not found!', HttpStatus.NOT_FOUND)
+
+    const user = await this.usersRepository.findOne({ where: { id: userId } })
+    if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
+    
+    const createdInscription = await this.inscriptionsRepository.create({
+      ...createInscriptionDto,
+      user: user,
+      event: event,
+    })
+
+    return this.inscriptionsRepository.save(createdInscription)
   }
 }

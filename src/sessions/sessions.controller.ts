@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, ParseIntPipe, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, ParseIntPipe, Put, HttpCode } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
@@ -10,9 +10,9 @@ export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
   @Post('events/:id/sessions')
-  async create(@Res() response: Response, @Body() createSessionDto: CreateSessionDto, @Param('id', ParseIntPipe) id: number,): Promise<Session | Record<string, any>> {
-    await this.sessionsService.create(id, createSessionDto)
-    return response.status(200).json({ message: "Session Created Succesfully!" })
+  async create(@Body() createSessionDto: CreateSessionDto, @Param('id', ParseIntPipe) id: number,): Promise<Session | Record<string, any>> {
+    const res = await this.sessionsService.create(id, createSessionDto)
+    return res
   }
 
   @Get('events/:id/sessions')
@@ -30,9 +30,9 @@ export class SessionsController {
     return this.sessionsService.update(+id, updateSessionDto);
   }
 
+  @HttpCode(204)
   @Delete('sessions/:id')
   async remove(@Param('id') id: number) {
-    await this.sessionsService.remove(+id);
-    return response.status(204)
+    return await this.sessionsService.remove(+id);
   }
 }

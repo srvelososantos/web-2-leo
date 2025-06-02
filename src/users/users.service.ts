@@ -13,8 +13,6 @@ export class UsersService {
     private readonly usersRepository: Repository<User>
   ){  }
   
-
-
   async createUser(UserDto: CreateUserDto): Promise<CreateUserDto> {
     const createdUser = await this.usersRepository.save(UserDto);
     return createdUser;
@@ -27,7 +25,13 @@ export class UsersService {
   }
 
   async removeOne(id: number){
-    return this.usersRepository.delete(id)
+    const user = await this.usersRepository.findOne({
+      where: { id }
+    })
+    if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
+    
+    await this.usersRepository.delete(id)
+    return user
   }
 
   async removeAll() {
