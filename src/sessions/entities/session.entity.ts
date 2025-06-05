@@ -16,12 +16,18 @@ export class Session {
   @Column()
   duration: number;
 
+  @Column()
+  lecture: boolean;
+
+  @Column()
+  course_max_cap: number;
+
   // Cada sessão pertence a um único evento
   @ManyToOne(() => Event, event => event.sessions, { onDelete: 'CASCADE' })
   eventt: Event;
 
   @ManyToMany(() => User, user => user.sessionn, { onDelete: 'CASCADE' })
-  user: User;
+  user: User[];
 
 
 }

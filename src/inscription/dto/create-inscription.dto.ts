@@ -1,15 +1,15 @@
+import { Type } from "class-transformer"
+import { IsDate, IsEnum } from "class-validator"
 import { Status } from "src/enums/status.enum"
-import { User } from "src/users/entities/user.entity"
+
 
 export class CreateInscriptionDto {
 
-    
-    readonly user: User
-    
-    readonly event: Event
+    @IsDate()
+    @Type(() => Date)
+    dt_inscription: Date
 
-    readonly dt_inscription: Date
-
-    readonly status: Status
+    @IsEnum(Status)
+    status: Status
 
 }

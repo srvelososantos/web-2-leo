@@ -1,8 +1,20 @@
+import { IsBoolean, IsNumber, IsString } from "class-validator";
+
 export class CreateSessionDto {
 
-    readonly id?: number;
-    readonly title: string;
-    readonly description: string;
-    readonly duration: number;
+    @IsString()
+    title: string;
+
+    @IsString()
+    description: string;
+
+    @IsNumber()
+    duration: number;
+
+    @IsBoolean()
+    lecture: boolean;
+
+    @IsNumber()
+    course_max_cap: number;
 
 }

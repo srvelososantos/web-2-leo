@@ -4,18 +4,18 @@ import { Inscriptions } from '../../inscription/entities/inscription.entity'
 export class CreateEventDto {
 
     @IsString()
-    readonly name: string
+    name: string
 
     @IsString()
-    readonly description: string
+    description: string
 
     @IsString()
-    readonly local: string
+    local: string
 
     @IsString()
-    readonly link: string
+    link: string
 
     @IsNumber()
-    readonly max_cap: number
+    max_cap: number
 
 }

@@ -22,6 +22,7 @@ export class Inscriptions{
     @Column({
         type: 'enum',
         enum: Status,
+        default: Status.PENDING
     })
     status: Status
 }

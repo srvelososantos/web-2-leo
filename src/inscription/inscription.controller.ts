@@ -5,7 +5,9 @@ import { UpdateInscriptionDto } from './dto/update-inscription.dto';
 
 @Controller('inscription')
 export class InscriptionController {
-  constructor(private readonly inscriptionService: InscriptionService) {}
+  constructor(private readonly inscriptionService: InscriptionService) {
+
+  }
 
   @Post()
   create(@Body() createInscriptionDto: CreateInscriptionDto) {

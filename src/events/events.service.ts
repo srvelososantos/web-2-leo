@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { Inscriptions } from 'src/inscription/entities/inscription.entity';
 import { CreateInscriptionDto } from 'src/inscription/dto/create-inscription.dto';
 import { User } from 'src/users/entities/user.entity';
+import { Session } from 'src/sessions/entities/session.entity';
 
 @Injectable()
 export class EventsService {
@@ -19,7 +20,10 @@ export class EventsService {
     private readonly inscriptionsRepository: Repository<Inscriptions>,
 
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>
+    private readonly usersRepository: Repository<User>,
+
+    @InjectRepository(Session)
+    private readonly sessionsRepository: Repository<Session>
   ) {}
 
   async create(createEventDto: CreateEventDto): Promise<CreateEventDto> {
@@ -60,7 +64,7 @@ export class EventsService {
   async signupPartEvent(eventId: number, userId: number, createInscriptionDto: CreateInscriptionDto){
     const event = await this.eventsRepository.findOne({ where: { id: eventId } })
     if(!event) throw new HttpException('Event not found!', HttpStatus.NOT_FOUND)
-
+    userId = 24
     const user = await this.usersRepository.findOne({ where: { id: userId } })
     if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
     
@@ -68,8 +72,17 @@ export class EventsService {
       ...createInscriptionDto,
       user: user,
       event: event,
-    })
+    });
+    //user.sessionn.push()
+    const sessions = await this.sessionsRepository.find({ where: { eventt: event, lecture: true }})
+    console.log(sessions)
 
-    return this.inscriptionsRepository.save(createdInscription)
+    const inscrptSessionsToSave = []
+
+    for (const session of sessions){
+      user.sessionn.push(session)
+    }
+
+    return createdInscription
   }
 }
