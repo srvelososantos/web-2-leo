@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -67,21 +67,25 @@ export class EventsService {
     userId = 24
     const user = await this.usersRepository.findOne({ where: { id: userId } })
     if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
-    
+    const existingInscription = await this.inscriptionsRepository.findOne({ where: { user: { id: userId }, event: { id: eventId } } })
+    if(existingInscription) throw new ConflictException('User alredy has a inscription in this event')
+
     const createdInscription = await this.inscriptionsRepository.create({
       ...createInscriptionDto,
       user: user,
       event: event,
     });
-    //user.sessionn.push()
+
+    this.inscriptionsRepository.save(createdInscription)
+    
     const sessions = await this.sessionsRepository.find({ where: { eventt: event, lecture: true }})
     console.log(sessions)
 
-    const inscrptSessionsToSave = []
-
-    for (const session of sessions){
-      user.sessionn.push(session)
+    for(const session of sessions){
+      await this.sessionsRepository.createQueryBuilder().relation(User, 'sessionn').of(user.id).add(session.id)
     }
+
+    await this.usersRepository.save(user)
 
     return createdInscription
   }
