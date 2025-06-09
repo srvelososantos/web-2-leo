@@ -2,16 +2,17 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { InscriptionService } from './inscription.service';
 import { CreateInscriptionDto } from './dto/create-inscription.dto';
 import { UpdateInscriptionDto } from './dto/update-inscription.dto';
+import { signupOtherSessions } from './dto/signupOtherSessions.dto';
 
-@Controller('inscription')
+@Controller('enrollments')
 export class InscriptionController {
   constructor(private readonly inscriptionService: InscriptionService) {
 
   }
 
-  @Post()
-  create(@Body() createInscriptionDto: CreateInscriptionDto) {
-    return this.inscriptionService.create(createInscriptionDto);
+  @Post(':id/workshops')
+  create(@Param() id: number, @Body() signupOtherSessions: signupOtherSessions) {
+    return this.inscriptionService.signupOtherSessions(id, signupOtherSessions);
   }
 
   @Get()

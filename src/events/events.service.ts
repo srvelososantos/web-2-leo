@@ -60,13 +60,14 @@ export class EventsService {
   }
 
 
-  //responsavel por inscrever participante em um evento
+  // inscrever participante em um evento e em todas as sessoes lecture
   async signupPartEvent(eventId: number, userId: number, createInscriptionDto: CreateInscriptionDto){
     const event = await this.eventsRepository.findOne({ where: { id: eventId } })
     if(!event) throw new HttpException('Event not found!', HttpStatus.NOT_FOUND)
     userId = 24
     const user = await this.usersRepository.findOne({ where: { id: userId } })
     if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
+
     const existingInscription = await this.inscriptionsRepository.findOne({ where: { user: { id: userId }, event: { id: eventId } } })
     if(existingInscription) throw new ConflictException('User alredy has a inscription in this event')
 
