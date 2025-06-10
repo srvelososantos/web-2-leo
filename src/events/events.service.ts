@@ -59,16 +59,25 @@ export class EventsService {
     return this.eventsRepository.delete(id)
   }
 
+  async participants(id_event: number){
+    const participants = await this.inscriptionsRepository.find({
+      where: { event: {id: id_event } }
+    })
+    
+    const users = participants.map(insc => insc.user)
+    return users
+  }
+
 
   // inscrever participante em um evento e em todas as sessoes lecture
-  async signupPartEvent(eventId: number, userId: number, createInscriptionDto: CreateInscriptionDto){
+  async signupPartEvent(eventId: number, createInscriptionDto: CreateInscriptionDto){
     const event = await this.eventsRepository.findOne({ where: { id: eventId } })
     if(!event) throw new HttpException('Event not found!', HttpStatus.NOT_FOUND)
-    userId = 24
-    const user = await this.usersRepository.findOne({ where: { id: userId } })
+
+    const user = await this.usersRepository.findOne({ where: { id: createInscriptionDto.userid } })
     if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
 
-    const existingInscription = await this.inscriptionsRepository.findOne({ where: { user: { id: userId }, event: { id: eventId } } })
+    const existingInscription = await this.inscriptionsRepository.findOne({ where: { user: { id: createInscriptionDto.userid }, event: { id: eventId } } })
     if(existingInscription) throw new ConflictException('User alredy has a inscription in this event')
 
     const createdInscription = await this.inscriptionsRepository.create({

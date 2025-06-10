@@ -17,24 +17,36 @@ export class InscriptionService {
 
     @InjectRepository(Session)
         private readonly sessionsRepository: Repository<Session>,
+    
+    @InjectRepository(User)
+        private readonly usersRepository: Repository<User>,
 
 
   ){  }
 
   async signupOtherSessions(insc_id: number, signupOtherSessions: signupOtherSessions) {
 
-    const session = await this.sessionsRepository.findOne({where: { id: signupOtherSessions.idSession }})
+    const session = await this.sessionsRepository.findOne(
+      { where: { id: signupOtherSessions.idSession }, relations: ['eventt'] }
+    )
     if(!session) throw new HttpException('Session not found!', HttpStatus.NOT_FOUND)
       
-      console.log(insc_id)
-    // http 500. .....
-    const inscription = await this.inscriptionsRepository.findOne({where: { id: insc_id }})
+    const inscription = await this.inscriptionsRepository.findOne(
+      {where: { id: insc_id }, relations: ['user', 'event']}
+    )
     if(!inscription) throw new HttpException('Inscription not found!', HttpStatus.NOT_FOUND)
 
-    const userinscript = this.inscriptionsRepository.findOne({ where: { user: { id: inscription.user.id }, event: { id: session.eventt.id } } })
+    const userinscript = await this.inscriptionsRepository.findOne(
+      { where: { user: { id: signupOtherSessions.userid }, event: { id: session.eventt.id } } }
+    )
     if(!userinscript) throw new HttpException('User is not subscribed in the event', HttpStatus.NOT_FOUND)
 
-    await this.sessionsRepository.createQueryBuilder().relation(User, 'sessionn').of(inscription.user.id).add(session.id)
+    try{
+      
+      return await this.sessionsRepository.createQueryBuilder().relation(User, 'sessionn').of(inscription.user.id).add(session.id)
+    }catch(e){
+      throw new HttpException('User is alredy subscribed in the Session', HttpStatus.CONFLICT)
+    }
   }
  
   findAll() {
@@ -49,7 +61,21 @@ export class InscriptionService {
     return `This action updates a #${id} inscription`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} inscription`;
+  async remove(insc_id: number) {
+
+    const insc = await this.inscriptionsRepository.findOne({ where: { id: insc_id }, relations: ['user', 'event'] })
+    if (!insc) {
+      throw new HttpException('Inscription not found', HttpStatus.NOT_FOUND);
+    }
+
+    const sessions_ids = await this.sessionsRepository.find({
+      where: { eventt: { id: insc.event.id } }
+    })
+
+    const sessions = sessions_ids.map((session) => session.id)
+  
+    await this.usersRepository.createQueryBuilder().relation(User, 'sessionn').of(insc.user.id).remove(sessions)
+
+    return { message: 'Sessions removed from user successfully' }
   }
 }

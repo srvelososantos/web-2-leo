@@ -36,7 +36,12 @@ export class EventsController {
 
   @Post(':id/enrollments')
   createInsciption(@Param('id') id: number, @Body() createInscriptionDto: CreateInscriptionDto){
-    return this.eventsService.signupPartEvent(id, 0, createInscriptionDto)
+    return this.eventsService.signupPartEvent(id, createInscriptionDto)
+  }
+
+  @Get(':id/participants')
+  getParticipants(@Param('id') id: number){
+    return this.eventsService.participants(id)
   }
   
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
 import { InscriptionService } from './inscription.service';
 import { CreateInscriptionDto } from './dto/create-inscription.dto';
 import { UpdateInscriptionDto } from './dto/update-inscription.dto';
@@ -11,7 +11,7 @@ export class InscriptionController {
   }
 
   @Post(':id/workshops')
-  create(@Param() id: number, @Body() signupOtherSessions: signupOtherSessions) {
+  create(@Param('id') id: number, @Body() signupOtherSessions: signupOtherSessions) {
     return this.inscriptionService.signupOtherSessions(id, signupOtherSessions);
   }
 
@@ -30,8 +30,9 @@ export class InscriptionController {
     return this.inscriptionService.update(+id, updateInscriptionDto);
   }
 
+  @HttpCode(204)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.inscriptionService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return await this.inscriptionService.remove(+id);
   }
 }

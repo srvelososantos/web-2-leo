@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Session } from './entities/session.entity';
 import { Repository } from 'typeorm';
 import { Event } from 'src/events/entities/event.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class SessionsService {
@@ -15,6 +16,9 @@ export class SessionsService {
 
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
+
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
   ){}
 
   async create(id: number, createSessionDto: CreateSessionDto) {
@@ -65,5 +69,13 @@ export class SessionsService {
 
   remove(id: number) {
     return this.sessionsRepository.delete(id)
+  }
+
+  async participants(session_id: number){
+    const participants = await this.usersRepository.find({
+      where: {sessionn: {id: session_id}}
+    })
+
+    return participants
   }
 }

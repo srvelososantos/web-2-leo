@@ -34,4 +34,10 @@ export class SessionsController {
   async remove(@Param('id') id: number) {
     return await this.sessionsService.remove(+id);
   }
+  
+  @Get('sessions/:id/participants')
+  getParticipants(@Param('id') id: number){
+    return this.sessionsService.participants(id)
+  }
+
 }
