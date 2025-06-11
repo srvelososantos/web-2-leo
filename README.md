@@ -31,6 +31,55 @@
 $ npm install
 ```
 
+## Example requests (create)
+events
+POST /event
+201
+{
+  "name": "evento sobre moda",
+  "description": "evento sobre moda",
+  "local": "sp fashion week",
+  "link": "spfsw.com",
+  "max_cap": 120
+}
+
+user
+POST /users
+201
+{
+  "name": "Leonardo Veloso",
+  "email": "veloso123@gmail.com",
+  "password": "takes123" 
+}
+
+enrollments
+POST /events/{eventIt}/enrollments
+201
+{
+  "dt_inscription": "1999-01-13",
+  "status": "pending",
+  "userid": 25
+}
+
+sessions
+POST /events/{eventId}/sessions
+201
+{
+  "title": "curso sobre moda",
+  "description": "curso sobre moda",
+  "duration": 12,
+  "lecture": false,
+  "course_max_cap": 12
+}
+
+user_session
+POST /enrollments/{enrollmentId}/workshops
+201
+{
+  "idSession": 17,
+  "userid": 25
+}
+
 ## Compile and run the project
 
 ```bash

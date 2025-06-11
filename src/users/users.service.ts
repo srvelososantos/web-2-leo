@@ -40,12 +40,7 @@ export class UsersService {
     }catch(e){
       throw new HttpException('Cannot delete user', HttpStatus.BAD_REQUEST)
     }
-    
-    
-  }
-
-  async removeAll() {
-    return this.usersRepository.deleteAll();
+  
   }
 
   async findById(id: number): Promise<User | null> {

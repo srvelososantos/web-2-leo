@@ -48,18 +48,6 @@ export class InscriptionService {
       throw new HttpException('User is alredy subscribed in the Session', HttpStatus.CONFLICT)
     }
   }
- 
-  findAll() {
-    return `This action returns all inscription`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} inscription`;
-  }
-
-  update(id: number, updateInscriptionDto: UpdateInscriptionDto) {
-    return `This action updates a #${id} inscription`;
-  }
 
   async remove(insc_id: number) {
 
