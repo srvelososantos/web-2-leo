@@ -39,7 +39,7 @@ export class InscriptionService {
     const userinscript = await this.inscriptionsRepository.findOne(
       { where: { user: { id: signupOtherSessions.userid }, event: { id: session.eventt.id } } }
     )
-    if(!userinscript) throw new HttpException('User is not subscribed in the event', HttpStatus.NOT_FOUND)
+    if(!userinscript) throw new HttpException('User is not subscribed in the event', HttpStatus.CONFLICT)
 
     try{
       
@@ -68,14 +68,20 @@ export class InscriptionService {
       throw new HttpException('Inscription not found', HttpStatus.NOT_FOUND);
     }
 
-    const sessions_ids = await this.sessionsRepository.find({
-      where: { eventt: { id: insc.event.id } }
-    })
+    try{
+      const sessions_ids = await this.sessionsRepository.find({
+        where: { eventt: { id: insc.event.id } }
+      })
 
-    const sessions = sessions_ids.map((session) => session.id)
-  
-    await this.usersRepository.createQueryBuilder().relation(User, 'sessionn').of(insc.user.id).remove(sessions)
+      const sessions = await sessions_ids.map((session) => session.id)
+    
+      await this.usersRepository.createQueryBuilder().relation(User, 'sessionn').of(insc.user.id).remove(sessions)
+      
+      await this.inscriptionsRepository.delete(insc_id)
 
-    return { message: 'Sessions removed from user successfully' }
+      return { message: 'Sessions removed from user successfully' }
+    }catch(e){
+      throw new HttpException('Cannot remove inscription and sessions from this user', HttpStatus.NOT_FOUND)
+    }
   }
 }

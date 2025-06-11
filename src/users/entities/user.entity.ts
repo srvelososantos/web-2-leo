@@ -18,6 +18,9 @@ export abstract class User{
     @Column()
     type: string;
 
+    @Column()
+    password: string;
+
     @OneToMany(() => Inscriptions, (inscription) => inscription.user)
     inscriptions: Inscriptions[];
 

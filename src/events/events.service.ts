@@ -56,16 +56,34 @@ export class EventsService {
   }
 
   async remove(id: number) {
-    return this.eventsRepository.delete(id)
+    const event = await this.eventsRepository.findOne({where: { id }})
+    if(!event) throw new HttpException('Event not found!', HttpStatus.NOT_FOUND)
+    console.log("teste")
+    console.log(event)
+    console.log(id)
+    try{
+      await this.eventsRepository.delete(id)
+      return event
+    }catch(e){
+      throw new HttpException('Cannot delete event', HttpStatus.NOT_FOUND)
+    }
   }
 
   async participants(id_event: number){
+    const event = await this.eventsRepository.findOne({ where: {id: id_event} })
+    if(!event) throw new HttpException('Event not found', HttpStatus.NOT_FOUND)
+
     const participants = await this.inscriptionsRepository.find({
       where: { event: {id: id_event } }
     })
     
-    const users = participants.map(insc => insc.user)
-    return users
+    try{
+      const users = participants.map(insc => insc.user)
+      return users
+    }catch(e){
+      throw new HttpException('Cannot Retrieve participants of this event', HttpStatus.NOT_FOUND)
+    }
+    
   }
 
 
@@ -89,7 +107,7 @@ export class EventsService {
     this.inscriptionsRepository.save(createdInscription)
     
     const sessions = await this.sessionsRepository.find({ where: { eventt: event, lecture: true }})
-    console.log(sessions)
+    //console.log(sessions)
 
     for(const session of sessions){
       await this.sessionsRepository.createQueryBuilder().relation(User, 'sessionn').of(user.id).add(session.id)

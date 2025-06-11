@@ -32,7 +32,7 @@ export class SessionsController {
   @HttpCode(204)
   @Delete('sessions/:id')
   async remove(@Param('id') id: number) {
-    return await this.sessionsService.remove(+id);
+    return await this.sessionsService.remove(id);
   }
   
   @Get('sessions/:id/participants')

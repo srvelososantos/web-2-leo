@@ -67,15 +67,33 @@ export class SessionsService {
     return this.sessionsRepository.save(searchSession)
   }
 
-  remove(id: number) {
-    return this.sessionsRepository.delete(id)
+  async remove(id: number) {
+    const session = await this.sessionsRepository.findOne({where: { id } })
+
+    if(!session) throw new HttpException('Session not found!', HttpStatus.NOT_FOUND)
+
+    try{
+      await this.sessionsRepository.delete(id)
+      return session
+    }catch(e){
+      throw new HttpException('Cannot delete Session!', HttpStatus.NOT_FOUND)
+    }
   }
 
   async participants(session_id: number){
-    const participants = await this.usersRepository.find({
-      where: {sessionn: {id: session_id}}
-    })
+    const session = await this.sessionsRepository.findOne({ where: {id: session_id} })
+    if(!session) throw new HttpException('Session not found!', HttpStatus.NOT_FOUND)
 
-    return participants
+    try{
+      const participants = await this.usersRepository.find({
+        where: {sessionn: {id: session_id}}
+      })
+
+      return participants
+
+    }catch(e){
+      throw new HttpException('Cannot Retrieve Participants of this session', HttpStatus.NOT_FOUND)
+    }
+    
   }
 }

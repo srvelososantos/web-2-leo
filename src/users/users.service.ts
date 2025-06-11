@@ -13,9 +13,14 @@ export class UsersService {
     private readonly usersRepository: Repository<User>
   ){  }
   
-  async createUser(UserDto: CreateUserDto): Promise<CreateUserDto> {
-    const createdUser = await this.usersRepository.save(UserDto);
-    return createdUser;
+  async createUser(UserDto: CreateUserDto) {
+    try{
+      const createdUser = await this.usersRepository.save(UserDto);
+      return createdUser;
+    }catch(e){
+      throw new HttpException('Cannot create user', HttpStatus.BAD_REQUEST)
+    }
+    
   }
 
   async findAllUsers(): Promise<User[]> {
@@ -29,9 +34,14 @@ export class UsersService {
       where: { id }
     })
     if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
+    try{
+      await this.usersRepository.delete(id)
+      return user 
+    }catch(e){
+      throw new HttpException('Cannot delete user', HttpStatus.BAD_REQUEST)
+    }
     
-    await this.usersRepository.delete(id)
-    return user
+    
   }
 
   async removeAll() {
