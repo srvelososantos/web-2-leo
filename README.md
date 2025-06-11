@@ -32,6 +32,7 @@ $ npm install
 ```
 
 ## Example requests (create)
+```bash
 events
 POST /event
 201
@@ -79,7 +80,7 @@ POST /enrollments/{enrollmentId}/workshops
   "idSession": 17,
   "userid": 25
 }
-
+```
 ## Compile and run the project
 
 ```bash
