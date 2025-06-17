@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpCode, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpCode, Put, UseGuards } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { CreateInscriptionDto } from 'src/inscription/dto/create-inscription.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'auth/jwt-auth.guard';
 
 @Controller('events')
 export class EventsController {
@@ -16,6 +17,7 @@ export class EventsController {
     return await this.eventsService.create(createEventDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({ summary: 'Recupera todos os eventos' })
   @ApiResponse({ status: 200, description: 'Eventos recuperados com sucesso' })

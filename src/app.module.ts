@@ -8,6 +8,7 @@ import { SessionsModule } from './sessions/sessions.module';
 import { InscriptionModule } from './inscription/inscription.module';
 import { CertificateModule } from './certificate/certificate.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from 'auth/auth.module';
 
 @Module({
   imports: [ 
@@ -16,14 +17,14 @@ import { ConfigModule } from '@nestjs/config';
       type: 'postgres',
       host: 'localhost',
       port: 5435,
-      database: 'postgres',
+      database: 'tutorial',
       username: 'postgres',
       password: 'postgres',
       synchronize: true,
       autoLoadEntities: true,
       logging: false,
       migrations: [__dirname + 'database/migrations/*{.js,.ts}'],
-    }), EventsModule, UsersModule, SessionsModule, InscriptionModule, CertificateModule ,
+    }), EventsModule, UsersModule, SessionsModule, InscriptionModule, CertificateModule, AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,9 +1,9 @@
 import { ConflictException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Inscriptions } from 'src/inscription/entities/inscription.entity';
 import { CreateInscriptionDto } from 'src/inscription/dto/create-inscription.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -23,7 +23,8 @@ export class EventsService {
     private readonly usersRepository: Repository<User>,
 
     @InjectRepository(Session)
-    private readonly sessionsRepository: Repository<Session>
+    private readonly sessionsRepository: Repository<Session>,
+
   ) {}
 
   async create(createEventDto: CreateEventDto): Promise<CreateEventDto> {
