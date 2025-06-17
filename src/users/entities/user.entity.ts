@@ -1,6 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
 import { Inscriptions } from './../../inscription/entities/inscription.entity'
 import { Session } from "src/sessions/entities/session.entity";
+import { Certificate } from "src/certificate/entities/certificate.entity";
 
 @Entity()
 @TableInheritance({ column: { type:'varchar', name: 'type' } })
@@ -27,4 +28,7 @@ export abstract class User{
     @ManyToMany(() => Session, session => session.user, { onDelete: 'CASCADE' })
     @JoinTable()
     sessionn: Session[];
+
+    @OneToMany(() => Certificate, (certificate) => certificate.user, { eager: true } )
+    certificates: Certificate[]
 }

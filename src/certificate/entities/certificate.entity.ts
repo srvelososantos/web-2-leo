@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Session } from "src/sessions/entities/session.entity";
+import { User } from "src/users/entities/user.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Certificate {
@@ -10,10 +12,12 @@ export class Certificate {
     val_code: string
 
     @Column()
-    user_name: string
+    @ManyToOne(() => User, (user) => user.certificates, { eager: true } )
+    user: User
 
     @Column()
-    event_session_name: string
+    @ManyToOne(() => Session, (session) => session.certificates, { eager: true })
+    event_session: string
 
     @Column()
     em_date: Date

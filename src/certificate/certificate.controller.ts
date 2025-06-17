@@ -12,9 +12,9 @@ export class CertificateController {
     return this.certificateService.create(createCertificateDto);
   }
 
-  @Get()
+  @Get('participant/:id')
   findAll() {
-    return this.certificateService.findAll();
+    return this.certificateService.findAllParticipants();
   }
 
   @Get(':id')

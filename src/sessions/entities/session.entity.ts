@@ -1,6 +1,7 @@
+import { Certificate } from 'src/certificate/entities/certificate.entity';
 import { Event } from 'src/events/entities/event.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Session {
@@ -28,6 +29,9 @@ export class Session {
 
   @ManyToMany(() => User, user => user.sessionn, { onDelete: 'CASCADE' })
   user: User[];
+
+  @OneToMany(() => Certificate, certificate => certificate.event_session, { onDelete: 'CASCADE' })
+  certificates: Certificate[]
 
 
 }
