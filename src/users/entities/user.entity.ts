@@ -2,6 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColum
 import { Inscriptions } from './../../inscription/entities/inscription.entity'
 import { Session } from "src/sessions/entities/session.entity";
 import { Certificate } from "src/certificate/entities/certificate.entity";
+import { Event } from "src/events/entities/event.entity";
 
 @Entity()
 @TableInheritance({ column: { type:'varchar', name: 'type' } })
@@ -17,7 +18,7 @@ export abstract class User{
     email: string;
 
     @Column()
-    type: string;
+    type: 'Participant' | 'Speaker' | 'Organizer';
 
     @Column()
     password: string;
@@ -30,5 +31,8 @@ export abstract class User{
     sessionn: Session[];
 
     @OneToMany(() => Certificate, (certificate) => certificate.user, { eager: true } )
-    certificates: Certificate[]
+    certificates: Certificate[];
+
+    @OneToMany(() => Event, event => event.user, { onDelete: 'CASCADE', eager: true } )
+    events: Event[];
 }

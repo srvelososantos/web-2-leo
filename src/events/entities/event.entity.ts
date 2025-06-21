@@ -1,6 +1,7 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
 import { Inscriptions } from '../../inscription/entities/inscription.entity'
 import { Session } from "src/sessions/entities/session.entity";
+import { User } from "src/users/entities/user.entity";
 
 
 @Entity()
@@ -30,4 +31,7 @@ export class Event {
     // Um evento pode ter várias sessões
     @OneToMany(() => Session, session => session.eventt, { cascade: true })
     sessions: Session[];
+
+    @ManyToOne(() => User, user => user.events)
+    user: User
 }

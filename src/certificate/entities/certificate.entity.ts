@@ -12,8 +12,9 @@ export class Certificate {
     val_code: string
 
     @Column()
-    @ManyToOne(() => User, (user) => user.certificates, { eager: true } )
-    user: User
+    @ManyToOne(() => User, (user) => user.certificates )
+    user: number
+
 
     @Column()
     @ManyToOne(() => Session, (session) => session.certificates, { eager: true })

@@ -5,13 +5,26 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Organizer } from './entities/organizer.entity';
+import { Speaker } from './entities/speaker.entity';
+import { Participant } from './entities/participant.entity';
 
 @Injectable()
 export class UsersService {
 
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>
+    private readonly usersRepository: Repository<User>,
+
+    @InjectRepository(Organizer)
+    private readonly organizersRepository: Repository<Organizer>,
+
+    @InjectRepository(Speaker)
+    private readonly speakersRepository: Repository<Speaker>,
+
+    @InjectRepository(Participant)
+    private readonly participantsRepository: Repository<Participant>,
+
   ){  }
   
   async createUser(UserDto: CreateUserDto) {
@@ -20,10 +33,15 @@ export class UsersService {
 
       const createdUser = this.usersRepository.create({
         ...UserDto,
-        password: hashedPassword,
+        password: hashedPassword
       });
 
-      await this.usersRepository.save(createdUser);
+      if(UserDto.type === 'Speaker') { await this.speakersRepository.save(createdUser); }
+
+      if(UserDto.type === 'Participant') { await this.participantsRepository.save(createdUser); }
+
+      if(UserDto.type === 'Organizer') { await this.organizersRepository.save(createdUser); }
+
       return createdUser;
     }catch(e){
       throw new HttpException(e, HttpStatus.BAD_REQUEST)

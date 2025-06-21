@@ -8,7 +8,7 @@ import { SessionsModule } from './sessions/sessions.module';
 import { InscriptionModule } from './inscription/inscription.module';
 import { CertificateModule } from './certificate/certificate.module';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from 'auth/auth.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [ 

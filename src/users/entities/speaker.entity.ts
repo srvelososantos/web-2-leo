@@ -1,8 +1,8 @@
 import { ChildEntity, Column } from "typeorm";
-import { User } from '../entities/user.entity'
+import { User } from './user.entity'
 
 @ChildEntity()
-export class Palestrante extends User{
+export class Speaker extends User{
 
     @Column()
     curricul_lattes: string;

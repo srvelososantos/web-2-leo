@@ -27,8 +27,17 @@ export class EventsService {
 
   ) {}
 
-  async create(createEventDto: CreateEventDto): Promise<CreateEventDto> {
-    const  createdEvent = await this.eventsRepository.save(createEventDto)
+  async create(createEventDto: CreateEventDto) {
+
+    const user = await this.usersRepository.findOne({ where: { id: createEventDto.userid } })
+    if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
+
+    const createdEvent = await this.eventsRepository.create({
+      ...createEventDto,
+      user: user
+    });
+
+    await this.eventsRepository.save(createdEvent)
     return createdEvent;
   }
 
@@ -105,7 +114,7 @@ export class EventsService {
       event: event,
     });
 
-    this.inscriptionsRepository.save(createdInscription)
+    await this.inscriptionsRepository.save(createdInscription)
     
     const sessions = await this.sessionsRepository.find({ where: { eventt: event, lecture: true }})
     //console.log(sessions)

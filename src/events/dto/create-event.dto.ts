@@ -24,4 +24,7 @@ export class CreateEventDto {
     @IsNumber()
     max_cap: number
 
+    @ApiProperty({ example: '6' })
+    @IsNumber()
+    userid: number
 }

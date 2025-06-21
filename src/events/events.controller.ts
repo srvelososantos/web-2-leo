@@ -4,20 +4,25 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { CreateInscriptionDto } from 'src/inscription/dto/create-inscription.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'auth/jwt-auth.guard';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RequiredRoles } from './../auth/decorators/req-role.decorator';
+import { usertypes } from 'src/enums/usertypes.enum';
+import { RolesGuard } from 'src/auth/roles/roles.guard';
 
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
+  
   @Post()
+  @RequiredRoles(usertypes.organizer)
   @ApiOperation({ summary: 'Cria novo evento' })
   @ApiResponse({ status: 201, description: 'Evento criado com sucesso' })
   async create(@Body() createEventDto: CreateEventDto) {
     return await this.eventsService.create(createEventDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({ summary: 'Recupera todos os eventos' })
   @ApiResponse({ status: 200, description: 'Eventos recuperados com sucesso' })
@@ -26,13 +31,14 @@ export class EventsController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Recupera um eventos' })
+  @ApiOperation({ summary: 'Recupera um evento' })
   @ApiResponse({ status: 200, description: 'Evento recuperado com sucesso' })
   findOne(@Param('id') id: string) {
     return this.eventsService.findOne(+id);
   }
 
   @Put(':id')
+  @RequiredRoles(usertypes.organizer)
   @ApiOperation({ summary: 'Modifica um evento' })
   @ApiResponse({ status: 200, description: 'Eventos modificado com sucesso' })
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {

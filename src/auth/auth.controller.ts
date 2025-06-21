@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
+import { AuthGuard } from "./auth.guard";
 
 @Controller('auth')
 export class AuthController{
@@ -11,9 +12,10 @@ export class AuthController{
         return this.authService.login(user);
     }
 
-    @Get('test')
-    test(){
-        return { message: "test" }
+    @UseGuards(AuthGuard)
+    @Get('me')
+    async me(@Req() req: any){
+        return this.authService.me(req)
     }
 
 }

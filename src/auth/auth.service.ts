@@ -10,6 +10,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    
   ) {}
 
   async validateUser(id: number, password: string) {
@@ -24,9 +25,13 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.name, sub: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const payload = { username: user.name, sub: user.id, email: user.email, type: user.type };
+    return { access_token: this.jwtService.sign(payload) };
   }
+
+  async me(req){
+    const user = await this.usersService.findById( req.user.sub )
+    return {...user, password: ''}
+  }
+
 }

@@ -1,8 +1,8 @@
 import { ChildEntity, Column } from "typeorm";
-import { User } from '../entities/user.entity'
+import { User } from './user.entity'
 
 @ChildEntity()
-export class Participante extends User{
+export class Participant extends User{
 
     @Column()
     data_inscricao: Date;
