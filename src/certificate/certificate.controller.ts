@@ -9,20 +9,25 @@ export class CertificateController {
 
   @Post()
   create(@Body() createCertificateDto: CreateCertificateDto) {
-    return this.certificateService.create(createCertificateDto);
+    //return this.certificateService.create(createCertificateDto);
   }
 
   @Get('participant/:id')
-  findAll() {
-    return this.certificateService.findAllParticipants();
+  allParticipants(@Param('id') id: number) {
+    return this.certificateService.findAllParticipants(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get('speaker/:id')
+  allSpeakers(@Param('id') id: string) {
     return this.certificateService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Get('validate/:id')
+  validateCode(@Param('id') id: string) {
+    return this.certificateService.findOne(+id);
+  }
+
+  @Patch('validate/:id')
   update(@Param('id') id: string, @Body() updateCertificateDto: UpdateCertificateDto) {
     return this.certificateService.update(+id, updateCertificateDto);
   }

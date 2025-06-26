@@ -3,7 +3,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, LessThanOrEqual, Repository } from 'typeorm';
 import { Inscriptions } from 'src/inscription/entities/inscription.entity';
 import { CreateInscriptionDto } from 'src/inscription/dto/create-inscription.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -34,7 +34,8 @@ export class EventsService {
 
     const createdEvent = await this.eventsRepository.create({
       ...createEventDto,
-      user: user
+      user: user, //usuario logado
+      certificatesGenerated: false
     });
 
     await this.eventsRepository.save(createdEvent)
@@ -64,6 +65,10 @@ export class EventsService {
     Object.assign(event, updateEventDto)
     return this.eventsRepository.save(event);
   }
+
+  async markAsWithCertificates(eventId: number): Promise<void> {
+  await this.eventsRepository.update(eventId, { certificatesGenerated: true });
+}
 
   async remove(id: number) {
     const event = await this.eventsRepository.findOne({where: { id }})
@@ -126,5 +131,23 @@ export class EventsService {
     await this.usersRepository.save(user)
 
     return createdInscription
+  }
+
+  async findDoneEvents() {
+    const agora = new Date();
+
+    const doneevents = await this.eventsRepository.find({
+      where: {
+        dt_fin: LessThanOrEqual(agora),
+        certificatesGenerated: false,
+      },
+      relations: ['sessions'],
+    });
+
+    if(doneevents.length > 0){
+      return doneevents
+    }
+    
+    return false
   }
 }

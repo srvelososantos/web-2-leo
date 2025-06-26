@@ -1,6 +1,7 @@
-import { IsNumber, IsString } from 'class-validator'
+import { IsDate, IsNumber, IsString } from 'class-validator'
 import { Inscriptions } from '../../inscription/entities/inscription.entity'
 import { ApiProperty } from '@nestjs/swagger'
+import { Type } from 'class-transformer'
 
 export class CreateEventDto {
 
@@ -27,4 +28,14 @@ export class CreateEventDto {
     @ApiProperty({ example: '6' })
     @IsNumber()
     userid: number
+
+    @ApiProperty({ example: '2021-12-06' })
+    @IsDate()
+    @Type(() => Date)
+    dt_ini: Date
+
+    @ApiProperty({ example: '2021-12-06' })
+    @IsDate()
+    @Type(() => Date)
+    dt_fin: Date
 }

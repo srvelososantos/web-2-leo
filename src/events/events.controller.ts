@@ -14,7 +14,11 @@ import { RolesGuard } from 'src/auth/roles/roles.guard';
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
-  
+  @Get('done')
+  finddoneevents(){
+    return this.eventsService.findDoneEvents()
+  }
+
   @Post()
   @RequiredRoles(usertypes.organizer)
   @ApiOperation({ summary: 'Cria novo evento' })

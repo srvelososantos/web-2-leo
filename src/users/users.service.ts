@@ -26,6 +26,8 @@ export class UsersService {
     private readonly participantsRepository: Repository<Participant>,
 
   ){  }
+
+  
   
   async createUser(UserDto: CreateUserDto) {
     try{

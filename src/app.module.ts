@@ -9,6 +9,7 @@ import { InscriptionModule } from './inscription/inscription.module';
 import { CertificateModule } from './certificate/certificate.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from 'src/auth/auth.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [ 
@@ -24,7 +25,7 @@ import { AuthModule } from 'src/auth/auth.module';
       autoLoadEntities: true,
       logging: false,
       migrations: [__dirname + 'database/migrations/*{.js,.ts}'],
-    }), EventsModule, UsersModule, SessionsModule, InscriptionModule, CertificateModule, AuthModule
+    }), EventsModule, UsersModule, SessionsModule, InscriptionModule, CertificateModule, AuthModule, ScheduleModule.forRoot()
   ],
   controllers: [AppController],
   providers: [AppService],
