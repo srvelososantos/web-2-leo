@@ -15,8 +15,4 @@ export class CreateInscriptionDto {
     @IsEnum(Status)
     status: Status
 
-    @ApiProperty({ example: '6' })
-    @IsNumber()
-    userid: number
-
 }

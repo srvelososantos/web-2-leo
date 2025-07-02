@@ -25,10 +25,6 @@ export class CreateEventDto {
     @IsNumber()
     max_cap: number
 
-    @ApiProperty({ example: '6' })
-    @IsNumber()
-    userid: number
-
     @ApiProperty({ example: '2021-12-06' })
     @IsDate()
     @Type(() => Date)

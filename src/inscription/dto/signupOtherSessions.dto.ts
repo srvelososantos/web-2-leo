@@ -6,8 +6,4 @@ export class signupOtherSessions{
     @ApiProperty({ example: '2' })
     @IsNumber()
     idSession: number
-
-    @ApiProperty({ example: '5' })
-    @IsNumber()
-    userid: number
 }

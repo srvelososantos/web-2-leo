@@ -24,7 +24,7 @@ export class InscriptionService {
 
   ){  }
 
-  async signupOtherSessions(insc_id: number, signupOtherSessions: signupOtherSessions) {
+  async signupOtherSessions(insc_id: number, signupOtherSessions: signupOtherSessions, req: any) {
 
     const session = await this.sessionsRepository.findOne(
       { where: { id: signupOtherSessions.idSession }, relations: ['eventt'] }
@@ -37,7 +37,7 @@ export class InscriptionService {
     if(!inscription) throw new HttpException('Inscription not found!', HttpStatus.NOT_FOUND)
 
     const userinscript = await this.inscriptionsRepository.findOne(
-      { where: { user: { id: signupOtherSessions.userid }, event: { id: session.eventt.id } } }
+      { where: { user: { id: req.sub }, event: { id: session.eventt.id } } }
     )
     if(!userinscript) throw new HttpException('User is not subscribed in the event', HttpStatus.CONFLICT)
 

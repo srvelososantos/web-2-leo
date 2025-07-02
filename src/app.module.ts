@@ -10,6 +10,7 @@ import { CertificateModule } from './certificate/certificate.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from 'src/auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EventsService } from './events/events.service';
 
 @Module({
   imports: [ 
@@ -28,6 +29,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     }), EventsModule, UsersModule, SessionsModule, InscriptionModule, CertificateModule, AuthModule, ScheduleModule.forRoot()
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EventsService],
 })
 export class AppModule {}

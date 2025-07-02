@@ -37,11 +37,13 @@ events
 POST /event
 201
 {
-  "name": "evento sobre moda",
-  "description": "evento sobre moda",
+  "name": "evento sobre airbnb",
+  "description": "evento sobre airbnb",
   "local": "sp fashion week",
   "link": "spfsw.com",
-  "max_cap": 120
+  "max_cap": 120,
+  "dt_ini": "2025-06-20",
+  "dt_fin": "2025-06-20"
 }
 
 user
@@ -50,7 +52,8 @@ POST /users
 {
   "name": "Leonardo Veloso",
   "email": "veloso123@gmail.com",
-  "password": "takes123" 
+  "password": "takes123",
+  "type": "Organizer"
 }
 
 enrollments
@@ -58,8 +61,7 @@ POST /events/{eventIt}/enrollments
 201
 {
   "dt_inscription": "1999-01-13",
-  "status": "pending",
-  "userid": 25
+  "status": "pending"
 }
 
 sessions
@@ -71,6 +73,13 @@ POST /events/{eventId}/sessions
   "duration": 12,
   "lecture": false,
   "course_max_cap": 12
+}
+
+POST /auth/login
+200
+{
+  "id": 4,
+  "password": "takes123"
 }
 
 user_session

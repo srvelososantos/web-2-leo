@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, Req } from '@nestjs/common';
 import { InscriptionService } from './inscription.service';
 import { CreateInscriptionDto } from './dto/create-inscription.dto';
 import { UpdateInscriptionDto } from './dto/update-inscription.dto';
@@ -14,8 +14,8 @@ export class InscriptionController {
   @Post(':id/workshops')
   @ApiOperation({ summary: 'Inscreve um usuario em uma sessão' })
   @ApiResponse({ status: 201, description: 'Usuario inscrito com sucesso' })
-  create(@Param('id') id: number, @Body() signupOtherSessions: signupOtherSessions) {
-    return this.inscriptionService.signupOtherSessions(id, signupOtherSessions);
+  create(@Param('id') id: number, @Body() signupOtherSessions: signupOtherSessions, @Req() req: any) {
+    return this.inscriptionService.signupOtherSessions(id, signupOtherSessions, req);
   }
 
   @HttpCode(204)

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpCode, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpCode, Put, UseGuards, Req } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -14,6 +14,8 @@ import { RolesGuard } from 'src/auth/roles/roles.guard';
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
+  
+
   @Get('done')
   finddoneevents(){
     return this.eventsService.findDoneEvents()
@@ -23,8 +25,8 @@ export class EventsController {
   @RequiredRoles(usertypes.organizer)
   @ApiOperation({ summary: 'Cria novo evento' })
   @ApiResponse({ status: 201, description: 'Evento criado com sucesso' })
-  async create(@Body() createEventDto: CreateEventDto) {
-    return await this.eventsService.create(createEventDto);
+  async create(@Body() createEventDto: CreateEventDto, @Req() req: any) {
+    return await this.eventsService.create(createEventDto, req.user);
   }
 
   @Get()
@@ -51,6 +53,7 @@ export class EventsController {
 
   @HttpCode(204)
   @Delete(':id')
+  @RequiredRoles(usertypes.organizer)
   @ApiOperation({ summary: 'Deleta um evento' })
   @ApiResponse({ status: 204, description: 'Evento deletado com sucesso' })
   remove(@Param('id') id: number) {
@@ -61,8 +64,8 @@ export class EventsController {
   @Post(':id/enrollments')
   @ApiOperation({ summary: 'Cria uma nova inscriçao' })
   @ApiResponse({ status: 201, description: 'Inscriçao criada com sucesso' })
-  createInsciption(@Param('id') id: number, @Body() createInscriptionDto: CreateInscriptionDto){
-    return this.eventsService.signupPartEvent(id, createInscriptionDto)
+  createInsciption(@Param('id') id: number, @Body() createInscriptionDto: CreateInscriptionDto, @Req() req: any){
+    return this.eventsService.signupPartEvent(id, createInscriptionDto, req)
   }
 
   @Get(':id/participants')

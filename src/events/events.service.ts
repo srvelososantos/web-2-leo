@@ -27,11 +27,11 @@ export class EventsService {
 
   ) {}
 
-  async create(createEventDto: CreateEventDto) {
+  async create(createEventDto: CreateEventDto, userr: any) {
 
-    const user = await this.usersRepository.findOne({ where: { id: createEventDto.userid } })
+    const user = await this.usersRepository.findOne({ where: { id: userr.sub } })
     if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
-
+      console.log(userr)
     const createdEvent = await this.eventsRepository.create({
       ...createEventDto,
       user: user, //usuario logado
@@ -103,14 +103,14 @@ export class EventsService {
 
 
   // inscrever participante em um evento e em todas as sessoes lecture
-  async signupPartEvent(eventId: number, createInscriptionDto: CreateInscriptionDto){
+  async signupPartEvent(eventId: number, createInscriptionDto: CreateInscriptionDto, userr: any){
     const event = await this.eventsRepository.findOne({ where: { id: eventId } })
     if(!event) throw new HttpException('Event not found!', HttpStatus.NOT_FOUND)
 
-    const user = await this.usersRepository.findOne({ where: { id: createInscriptionDto.userid } })
+    const user = await this.usersRepository.findOne({ where: { id: userr.sub } })
     if(!user) throw new HttpException('User not found!', HttpStatus.NOT_FOUND)
 
-    const existingInscription = await this.inscriptionsRepository.findOne({ where: { user: { id: createInscriptionDto.userid }, event: { id: eventId } } })
+    const existingInscription = await this.inscriptionsRepository.findOne({ where: { user: { id: userr.sub }, event: { id: eventId } } })
     if(existingInscription) throw new ConflictException('User alredy has a inscription in this event')
 
     const createdInscription = await this.inscriptionsRepository.create({
@@ -149,5 +149,29 @@ export class EventsService {
     }
     
     return false
+  }
+
+  async report(id: number){
+    const event = await this.eventsRepository.findOne({
+      where: { id: id },
+      //relations: ['user', 'sessions'],
+    });
+
+    if (!event) {
+      throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
+    }
+
+    const inscriptions = await this.inscriptionsRepository.find({
+      where: { event: { id } },
+      relations: ['user'],
+    });
+
+    const participants = inscriptions.map(inscription => inscription.user);
+
+    return {
+      event,
+      totalParticipants: participants.length,
+      participants,
+    };
   }
 }

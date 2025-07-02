@@ -1,1 +1,7 @@
-export class CreateCertificateDto {}
+
+
+export class CreateCertificateDto {
+
+    
+
+}

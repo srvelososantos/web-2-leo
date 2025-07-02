@@ -14,10 +14,12 @@ export class Certificate {
     @ManyToOne(() => User, (user) => user.certificates)
     user: User
 
-    @Column()
-    @ManyToOne(() => Session, (session) => session.certificates, { eager: true })
-    event_session: string
+    @ManyToOne(() => Session, session => session.certificates, { eager: true })
+    event_session: Session
 
     @Column()
     em_date: Date
+
+    @Column()
+    revoked: boolean
 }

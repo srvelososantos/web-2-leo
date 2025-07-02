@@ -24,6 +24,7 @@ export class Session {
   course_max_cap: number;
 
   // Cada sessão pertence a um único evento
+
   @ManyToOne(() => Event, event => event.sessions, { onDelete: 'CASCADE' })
   eventt: Event;
 

@@ -46,7 +46,7 @@ export class UsersService {
 
       return createdUser;
     }catch(e){
-      throw new HttpException(e, HttpStatus.BAD_REQUEST)
+      throw new HttpException(e + 'type:' + UserDto.type, HttpStatus.BAD_REQUEST)
     }
     
   }
